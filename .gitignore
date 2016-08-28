@@ -1,3 +1,11 @@
+# Some Qt things
+Makefile.Release
+Makefile.Debug
+.qmake.stash
+qt-example-calculator.pro.user
+qec_resource.rc
+
+
 # Compiled Object files
 *.slo
 *.lo
