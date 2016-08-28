@@ -5,6 +5,17 @@ Makefile.Debug
 qt-example-calculator.pro.user
 qec_resource.rc
 
+# My build things
+TinPigeon/app/build/
+TinPigeon/app/release/
+TinPigeon/app/debug/
+TinPigeon/test/build/
+TinPigeon/test/release/
+TinPigeon/test/debug/
+TinPigeon/dcBase.bat
+TinPigeon/runApp.bat
+TinPigeon/runTests.bat
+
 
 # Compiled Object files
 *.slo
