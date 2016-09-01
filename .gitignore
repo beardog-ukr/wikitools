@@ -1,7 +1,9 @@
 # Some Qt things
 Makefile.Release
 Makefile.Debug
+Makefile
 .qmake.stash
+*.pro.user
 qt-example-calculator.pro.user
 qec_resource.rc
 
