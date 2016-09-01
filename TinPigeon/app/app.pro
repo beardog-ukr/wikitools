@@ -13,12 +13,9 @@ OBJECTS_DIR = build/obj
 RCC_DIR = build/rcc
 UI_DIR = build/ui
 
-HEADERS += \
-           src/cpp/TinPigeonApp.h
+HEADERS =  src/cpp/TinPigeonApp.h
+HEADERS += src/cpp/SimplePageReader.h
 
-SOURCES +=  \
-           src/cpp/main.cpp \
-           src/cpp/TinPigeonApp.cpp
-
-#RESOURCES += \
-#    layouts.qrc
+SOURCES =  src/cpp/main.cpp
+SOURCES += src/cpp/TinPigeonApp.cpp
+SOURCES += src/cpp/SimplePageReader.cpp
