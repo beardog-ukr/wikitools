@@ -8,12 +8,11 @@
 #include <QMap>
 #include <QNetworkAccessManager>
 #include <QTimer>
-//#include <math.h>       // modf
-//using namespace std;
 
 // === =======================================================================
 
-#include "SimplePageReader.h"
+//#include "SimplePageReader.h"
+#include "WikiCategoryReader.h"
 
 // === =======================================================================
 // === =======================================================================
@@ -21,8 +20,9 @@
 TinPigeonApp::TinPigeonApp(QObject* parent)
              :QObject(parent){
   appExitCode=0;//
-  urlToLoad = "";
-  pageReader = 0;
+  wikiLanguage = "";
+  categoryToLoad = "";
+  categoryReader = 0;
   startupTimer = 0;
   networkAccessManager = new QNetworkAccessManager(this);
 }
@@ -32,7 +32,50 @@ TinPigeonApp::TinPigeonApp(QObject* parent)
 TinPigeonApp::~TinPigeonApp() {
   delete startupTimer;
   delete networkAccessManager;
-  delete pageReader;
+  delete categoryReader;
+}
+
+// === =======================================================================
+
+bool TinPigeonApp::processCommandLine() {
+  bool result = true;
+  QMap<QString, QString> options;
+
+  QCommandLineParser parser;
+  parser.setApplicationDescription("Tin Pigeon application");
+  parser.addHelpOption();
+  parser.addVersionOption();
+
+  // command line options
+  QCommandLineOption categoryOption("category");
+  categoryOption.setDescription("Wiki category to read");
+  categoryOption.setValueName("category");
+  parser.addOption(categoryOption);
+
+  QCommandLineOption wikilangOption("wikilang");
+  wikilangOption.setDescription("Wiki language (\"en\" will be used by default)");
+  wikilangOption.setValueName("wikilang");
+  parser.addOption(wikilangOption);
+
+  // Process the actual command line arguments given by the user
+  QCoreApplication* ca = QCoreApplication::instance();
+  parser.process(*ca);
+
+  categoryToLoad = parser.value(categoryOption);
+  wikiLanguage = parser.value(wikilangOption);
+  if (categoryToLoad.isEmpty()) {
+    result = false;
+    qDebug() << "ERROR: wiki category was not specified";
+  }
+  else {
+    qDebug() << "category is " << categoryToLoad;
+  }
+
+  if (!result) {
+    qDebug() << parser.helpText() ;
+  }
+
+  return result;
 }
 
 // === =======================================================================
@@ -51,54 +94,20 @@ void TinPigeonApp::startEveryting() {
   delete startupTimer;
   startupTimer =0;
 
-  pageReader = new SimplePageReader(networkAccessManager, this);
-  connect(pageReader, SIGNAL(finished()), this, SLOT(downloaderFinished()));
-
-  bool result = pageReader->setUrlToLoad(urlToLoad);
-  if (result) {
-    result = pageReader->start() ;
+  categoryReader = new WikiCategoryReader(networkAccessManager, this);
+  categoryReader->setCategory(categoryToLoad);
+  if (!wikiLanguage.isEmpty()) {
+    categoryReader->setWiki(wikiLanguage);
   }
+  connect(categoryReader, SIGNAL(finished()), this, SLOT(processCategories()));
+
+  bool result = categoryReader->start() ;
 
   if (!result) {
-    qDebug() << "ERROR: at start: " << pageReader->getErrorMessage();
-    delete pageReader;
-    pageReader = 0;
+    qDebug() << "ERROR: at start: " << categoryReader->getErrorMessage();
+    delete categoryReader;
+    categoryReader = 0;
   }
-}
-
-// === =======================================================================
-
-bool TinPigeonApp::processCommandLine() {
-  bool result = true;
-  QMap<QString, QString> options;
-
-  QCommandLineParser parser;
-  parser.setApplicationDescription("Tin Pigeon application");
-  parser.addHelpOption();
-  parser.addVersionOption();
-
-  // An option with a value
-  QCommandLineOption urlOption("url");
-  urlOption.setDescription("Url to download");
-  urlOption.setValueName("url");
-  parser.addOption(urlOption);
-
-  // Process the actual command line arguments given by the user
-  QCoreApplication* ca = QCoreApplication::instance();
-  parser.process(*ca);
-
-  urlToLoad = parser.value(urlOption);
-  if (urlToLoad.isEmpty()) {
-    result = false;
-    qDebug() << "ERROR: url to download was not specified";
-    result = false;
-  }
-
-  if (!result) {
-    qDebug() << parser.helpText() ;
-  }
-
-  return result;
 }
 
 // === =======================================================================
@@ -109,20 +118,27 @@ int TinPigeonApp::getAppExitCode() const {
 
 // === =======================================================================
 
-void TinPigeonApp::downloaderFinished() {
-  qDebug() << "TinPigeonApp::downloaderFinished " << "here";
+void TinPigeonApp::processCategories() {
+  qDebug() << "TinPigeonApp::processCategories " << "here";
 
-  const QString em = pageReader->getErrorMessage();
-  if (em.isEmpty()) {
-    qDebug() << "TinPigeonApp::downloaderFinished " << "got: ";
-    qDebug() << pageReader->getReceivedData();
-  }
-  else {
-    qDebug() << "TinPigeonApp::downloaderFinished " << "ERROR: " << em;
+  const QString em = categoryReader->getErrorMessage();
+  if (!em.isEmpty()) {
+    qDebug() << "TinPigeonApp::processCategories " << "ERROR: " << em;
+    QCoreApplication::exit(1);
+    return;
   }
 
-  delete pageReader;
-  pageReader = 0;
+  QList<WikiCategoryElement> wceList = categoryReader->getCategoryElements();
+  qDebug() << "TinPigeonApp::processCategories " << "got " << wceList.count()
+           << " elements"   ;
+
+  QList<WikiCategoryElement>::const_iterator wceci;
+  for (wceci = wceList.constBegin(); wceci != wceList.constEnd(); ++wceci) {
+    qDebug() << "  " << wceci->pageId << "  as " << wceci->title;
+  }
+
+  delete categoryReader;
+  categoryReader = 0;
 
   QCoreApplication::exit(0);
 }

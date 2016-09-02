@@ -64,7 +64,7 @@ void BasicHttpReader::processReplyReadyRead() {
   //
   qDebug() << "BasicHttpReader::processReplyReadyRead() >>" << "here";
   if (reply) {
-    receivedData.append( QString::fromUtf8(reply->readAll()) );
+    receivedData.append( reply->readAll() ) ;
   }
 }
 
@@ -83,7 +83,8 @@ void BasicHttpReader::processReplyFinished() {
            << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
   if (reply->error()) {
-    errorMessage = QString("Download failed:\n%1.").arg(reply->errorString());
+    errorMessage = QString("Download failed: %1 (%2)")
+                      .arg(reply->errorString(), reply->url().toString());
   }
 
   const QVariant redirectionTarget = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
@@ -95,18 +96,30 @@ void BasicHttpReader::processReplyFinished() {
                       .arg(rtu.toString(), redirectedUrl.toString());
   }
 
+  if (errorMessage.isEmpty()) {
+    bool tboo = processReceivedData();
+    if (!tboo) {
+      qDebug() << "reply was " << reply->url().toString() ;
+    }
+  }
+
   reply->deleteLater();
   reply = 0;
 
-  if (errorMessage.isEmpty()) {
-    emit finished();
-  }
+  emit finished();
 }
 
 // === =======================================================================
 
-QStringList BasicHttpReader::getReceivedData() const {
+QByteArray BasicHttpReader::getReceivedData() const {
   return receivedData;
+}
+
+// === =======================================================================
+
+bool BasicHttpReader::processReceivedData() {
+  //nothing to do here; should be reimplemented in other classes
+  return true;
 }
 
 // === =======================================================================

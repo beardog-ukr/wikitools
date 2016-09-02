@@ -3,11 +3,11 @@
 
 #include <QObject>
 #include <QString>
-#include <QStringList>
+//#include <QStringList>
 
 class QNetworkAccessManager;
 class QNetworkReply;
-class QStringList;
+class QByteArray;
 
 class BasicHttpReader : public QObject
 {
@@ -18,13 +18,13 @@ public:
   virtual ~BasicHttpReader();
 
   QString getErrorMessage() const;
-  QStringList getReceivedData() const;
+  QByteArray getReceivedData() const;
 
   virtual bool start();
 
 protected slots:
-  void processReplyReadyRead();
-  void processReplyFinished();
+  virtual void processReplyReadyRead();
+  virtual void processReplyFinished();
 
 signals:
   void finished();
@@ -35,9 +35,10 @@ protected :
   QNetworkAccessManager* networkAccessManager;
   QNetworkReply* reply;
 
-  QStringList receivedData;
+  QByteArray receivedData;
 
   virtual QNetworkReply* makeRequest() =0;
+  virtual bool processReceivedData();
 
 };
 

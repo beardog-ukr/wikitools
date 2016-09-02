@@ -2,7 +2,8 @@
 #include <string>
 
 //class BasicHttpReader;
-class SimplePageReader;
+//class SimplePageReader;
+class WikiCategoryReader;
 
 class QTimer;
 class QNetworkAccessManager;
@@ -23,15 +24,16 @@ public:
   int getAppExitCode() const;
 
 public slots:
-  void downloaderFinished();
+  void processCategories();
   void startEveryting();
 
 protected:
   int appExitCode;
 
-  QString urlToLoad ;
+  QString categoryToLoad;
+  QString wikiLanguage;
 
-  SimplePageReader* pageReader;
+  WikiCategoryReader* categoryReader;
 
   QTimer* startupTimer;
   QNetworkAccessManager* networkAccessManager;
