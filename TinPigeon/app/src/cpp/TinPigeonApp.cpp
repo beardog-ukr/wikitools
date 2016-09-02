@@ -22,7 +22,7 @@ TinPigeonApp::TinPigeonApp(QObject* parent)
              :QObject(parent){
   appExitCode=0;//
   urlToLoad = "";
-  simplePageReader = 0;
+  pageReader = 0;
   startupTimer = 0;
   networkAccessManager = new QNetworkAccessManager(this);
 }
@@ -32,7 +32,7 @@ TinPigeonApp::TinPigeonApp(QObject* parent)
 TinPigeonApp::~TinPigeonApp() {
   delete startupTimer;
   delete networkAccessManager;
-  delete simplePageReader;
+  delete pageReader;
 }
 
 // === =======================================================================
@@ -51,15 +51,18 @@ void TinPigeonApp::startEveryting() {
   delete startupTimer;
   startupTimer =0;
 
-  simplePageReader = new SimplePageReader(networkAccessManager, this);
-  connect(simplePageReader, SIGNAL(finished()),
-          this, SLOT(downloaderFinished()));
+  pageReader = new SimplePageReader(networkAccessManager, this);
+  connect(pageReader, SIGNAL(finished()), this, SLOT(downloaderFinished()));
 
-  bool result = simplePageReader->start(urlToLoad) ;
+  bool result = pageReader->setUrlToLoad(urlToLoad);
+  if (result) {
+    result = pageReader->start() ;
+  }
+
   if (!result) {
-    qDebug() << "ERROR: at start: " << simplePageReader->getErrorMessage();
-    delete simplePageReader;
-    simplePageReader = 0;
+    qDebug() << "ERROR: at start: " << pageReader->getErrorMessage();
+    delete pageReader;
+    pageReader = 0;
   }
 }
 
@@ -109,17 +112,17 @@ int TinPigeonApp::getAppExitCode() const {
 void TinPigeonApp::downloaderFinished() {
   qDebug() << "TinPigeonApp::downloaderFinished " << "here";
 
-  const QString em = simplePageReader->getErrorMessage();
+  const QString em = pageReader->getErrorMessage();
   if (em.isEmpty()) {
     qDebug() << "TinPigeonApp::downloaderFinished " << "got: ";
-    qDebug() << simplePageReader->getReceivedData();
+    qDebug() << pageReader->getReceivedData();
   }
   else {
     qDebug() << "TinPigeonApp::downloaderFinished " << "ERROR: " << em;
   }
 
-  delete simplePageReader;
-  simplePageReader = 0;
+  delete pageReader;
+  pageReader = 0;
 
   QCoreApplication::exit(0);
 }

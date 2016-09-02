@@ -1,15 +1,11 @@
 #ifndef __SimplePageReader__
 #define __SimplePageReader__
 
-#include <QObject>
-#include <QString>
-#include <QStringList>
+#include "BasicHttpReader.h"
 
-class QNetworkAccessManager;
-class QNetworkReply;
-class QStringList;
+#include <QUrl>
 
-class SimplePageReader : public QObject
+class SimplePageReader : public BasicHttpReader
 {
   Q_OBJECT
 
@@ -17,27 +13,12 @@ public:
   SimplePageReader(QNetworkAccessManager* nam, QObject* parent =0);
   virtual ~SimplePageReader();
 
-  QString getErrorMessage() const;
-  QStringList getReceivedData() const;
-
-  bool start(const QString& url);
-
-protected slots:
-  void processReplyReadyRead();
-  void processReplyFinished();
-
-signals:
-  void finished();
+  bool setUrlToLoad(const QString& urlStr);
 
 protected :
-  QString urlToLoad;
-  QString errorMessage;
+  QNetworkReply* makeRequest();
 
-  QNetworkAccessManager* networkAccessManager;
-  QNetworkReply* reply;
-
-  QStringList receivedData;
-
+  QUrl urlToLoad;
 };
 
 #endif

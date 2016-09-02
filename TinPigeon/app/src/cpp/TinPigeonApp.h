@@ -1,7 +1,9 @@
 #include <QObject>
 #include <string>
 
+//class BasicHttpReader;
 class SimplePageReader;
+
 class QTimer;
 class QNetworkAccessManager;
 
@@ -29,7 +31,7 @@ protected:
 
   QString urlToLoad ;
 
-  SimplePageReader* simplePageReader;
+  SimplePageReader* pageReader;
 
   QTimer* startupTimer;
   QNetworkAccessManager* networkAccessManager;
