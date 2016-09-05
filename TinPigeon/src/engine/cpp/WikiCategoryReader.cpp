@@ -1,4 +1,5 @@
 #include "WikiCategoryReader.h"
+#include "FiveCatsLogger.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -14,8 +15,6 @@
 #include <QJsonParseError>
 
 #include <QVariant>
-
-#include <QDebug>
 
 // === =======================================================================
 // === =======================================================================

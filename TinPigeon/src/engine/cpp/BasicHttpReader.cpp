@@ -1,12 +1,12 @@
 #include "BasicHttpReader.h"
 
+#include "FiveCatsLogger.h"
+
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QVariant>
 #include <QUrl>
-
-#include <QDebug>
 
 // === =======================================================================
 // === =======================================================================
@@ -16,6 +16,8 @@ BasicHttpReader::BasicHttpReader(QNetworkAccessManager* nam, QObject* parent)
   errorMessage = "";
   networkAccessManager = nam;
   reply = 0;
+
+  c5 = 0;
 }
 
 // === =======================================================================
@@ -24,12 +26,20 @@ BasicHttpReader::~BasicHttpReader() {
   if (reply) {
     reply->deleteLater();
   }
+
+  //NOTE: c5 will be deleted by main application
 }
 
 // === =======================================================================
 
 QString BasicHttpReader::getErrorMessage() const {
   return errorMessage;
+}
+
+// === =======================================================================
+
+void BasicHttpReader::setLogger(FiveCatsLogger* c5p) {
+  c5 = c5p ;
 }
 
 // === =======================================================================
@@ -62,7 +72,7 @@ bool BasicHttpReader::start() {
 
 void BasicHttpReader::processReplyReadyRead() {
   //
-  qDebug() << "BasicHttpReader::processReplyReadyRead() >>" << "here";
+  c5d(c5, __c5_MN__, "here");
   if (reply) {
     receivedData.append( reply->readAll() ) ;
   }
@@ -79,8 +89,7 @@ void BasicHttpReader::processReplyFinished() {
   //qDebug() << reply->header(QNetworkRequest::ContentTypeHeader).toString();
   //qDebug() << reply->header(QNetworkRequest::LastModifiedHeader).toDateTime().toString();
   //qDebug() << reply->header(QNetworkRequest::ContentLengthHeader).toULongLong();
-  qDebug() << "BasicHttpReader::processReplyFinished() >> " << "http reply "
-           << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+  c5d(c5, __c5_MN__, "http reply " + reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString() );
 
   if (reply->error()) {
     errorMessage = QString("Download failed: %1 (%2)")

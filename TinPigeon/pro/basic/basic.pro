@@ -14,6 +14,9 @@ DESTDIR = build/bin
 INCLUDEPATH += "../../src/engine/cpp/"
 LIBS += ../engine/build/bin/libTinPigeon.a
 
+INCLUDEPATH += "../../src/FiveCatsLogger/cpp/"
+LIBS += "../../src/FiveCatsLogger/bin/libFiveCatsLogger.a"
+
 HEADERS =
 HEADERS += ../../src/basic/cpp/TinPigeonApp.h
 

@@ -5,6 +5,8 @@
 #include <QString>
 //#include <QStringList>
 
+class FiveCatsLogger;
+
 class QNetworkAccessManager;
 class QNetworkReply;
 class QByteArray;
@@ -21,6 +23,8 @@ public:
   QByteArray getReceivedData() const;
 
   virtual bool start();
+
+  void setLogger(FiveCatsLogger* c5p);
 
 protected slots:
   virtual void processReplyReadyRead();
@@ -40,6 +44,7 @@ protected :
   virtual QNetworkReply* makeRequest() =0;
   virtual bool processReceivedData();
 
+  FiveCatsLogger* c5;
 };
 
 #endif

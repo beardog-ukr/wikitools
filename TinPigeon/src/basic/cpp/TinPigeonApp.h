@@ -5,6 +5,8 @@
 //class SimplePageReader;
 class WikiCategoryReader;
 
+class FiveCatsLogger;
+
 class QTimer;
 class QNetworkAccessManager;
 
@@ -37,4 +39,6 @@ protected:
 
   QTimer* startupTimer;
   QNetworkAccessManager* networkAccessManager;
+
+  FiveCatsLogger* c5;
 };

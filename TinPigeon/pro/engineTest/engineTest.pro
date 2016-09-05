@@ -19,8 +19,10 @@ HEADERS =
 HEADERS += ../../src/engineTest/cpp/TestBasicHttpReader.h
 HEADERS += ../../src/engineTest/cpp/TestSimplePageReader.h
 HEADERS += ../../src/engineTest/cpp/TestWikiCategoryReader.h
+HEADERS += ../../src/engineTest/cpp/TestWikiExtLinksReader.h
 
 SOURCES =  ../../src/engineTest/cpp/TestMain.cpp
 SOURCES += ../../src/engineTest/cpp/TestBasicHttpReader.cpp
 SOURCES += ../../src/engineTest/cpp/TestSimplePageReader.cpp
 SOURCES += ../../src/engineTest/cpp/TestWikiCategoryReader.cpp
+SOURCES += ../../src/engineTest/cpp/TestWikiExtLinksReader.cpp
