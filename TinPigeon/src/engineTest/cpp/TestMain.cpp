@@ -1,20 +1,9 @@
-#include "TestBasicHttpReader.h"
-#include "TestSimplePageReader.h"
-#include "TestWikiCategoryReader.h"
+#include "TestEngine.h"
 
-int main(int , char **)
+int main(int argc, char **argv)
 {
-  QStringList testCmd;
+  TestEngine testEngine;
+  QTest::qExec(&testEngine, argc, argv);
 
-  TestBasicHttpReader testBasicHttpReader;
-  QTest::qExec(&testBasicHttpReader,testCmd);
-  
-  TestSimplePageReader testSimplePageReader;
-  QTest::qExec(&testSimplePageReader,testCmd);
-
-  TestWikiCategoryReader testWikiCategoryReader;
-  QTest::qExec(&testWikiCategoryReader,testCmd);
-
-  
   return 0;
 }

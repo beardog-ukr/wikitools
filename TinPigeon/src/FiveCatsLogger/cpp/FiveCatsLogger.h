@@ -30,6 +30,8 @@ public:
   void setUseStdOut(bool use);
   bool usesStdOut() const;
 
+  bool setKeepFileExtension(const bool keep);
+
   QString getErrorMessage() const ;
 
   void setLogLevel(LogLevel logLevel) ;
@@ -63,6 +65,7 @@ protected:
   int flushCounter;
   const int flushFrequency = 20;
   QString prepareFileName(const QString& fn) const;
+  QString prepareNewFileName(const QString& fn) const;
 
   QFile* echo;
 
@@ -70,6 +73,8 @@ protected:
 
   bool useStdout;
   QString composeLine(const QString& metaInfo, const QString& message) const;
+
+  bool keepFileExtension;
 };
 
 // === ========================================================================

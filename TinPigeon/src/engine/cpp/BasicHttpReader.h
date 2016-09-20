@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QString>
-//#include <QStringList>
 
 class FiveCatsLogger;
 
@@ -19,6 +18,7 @@ public:
   BasicHttpReader(QNetworkAccessManager* nam, QObject* parent =0);
   virtual ~BasicHttpReader();
 
+  bool hasError() const;
   QString getErrorMessage() const;
   QByteArray getReceivedData() const;
 
@@ -42,7 +42,7 @@ protected :
   QByteArray receivedData;
 
   virtual QNetworkReply* makeRequest() =0;
-  virtual bool processReceivedData();
+  virtual bool processReceivedData() =0;
 
   FiveCatsLogger* c5;
 };

@@ -1,0 +1,16 @@
+Category:Recipients of the Order For Courage, 3rd class
+
+This is a very small category with 6 pages
+
+
+/w/api.php?action=query&format=json&list=categorymembers&cmtitle=Category%3ARecipients+of+the+Order+For+Courage%2C+3rd+class
+
+/w/api.php
+?
+action=query
+&
+format=json
+&
+list=categorymembers
+&
+cmtitle=Category%3ARecipients+of+the+Order+For+Courage%2C+3rd+class

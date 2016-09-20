@@ -1,5 +1,5 @@
-#ifndef __WikiExtLinksReader__
-#define __WikiExtLinksReader__
+#ifndef __ArticleWikitextReader__
+#define __ArticleWikitextReader__
 
 #include "BasicHttpReader.h"
 
@@ -7,17 +7,13 @@
 
 // === =======================================================================
 
-// Here is the request example
-// https://en.wikipedia.org/w/api.php?
-//       action=query&format=json&prop=extlinks&pageids=31972164
-
-class WikiExtLinksReader : public BasicHttpReader
+class ArticleWikitextReader : public BasicHttpReader
 {
   Q_OBJECT
 
 public:
-  WikiExtLinksReader(QNetworkAccessManager* nam, QObject* parent =0);
-  virtual ~WikiExtLinksReader();
+  ArticleWikitextReader(QNetworkAccessManager* nam, QObject* parent =0);
+  virtual ~ArticleWikitextReader();
 
   bool setWiki(const QString& langCode);
   bool setPageId(const int& category);

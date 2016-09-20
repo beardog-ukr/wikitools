@@ -1,8 +1,7 @@
 #include "TinPigeonApp.h"
-
+#include "ActionBasic.h"
+#include "ActionWikiCategoryLoader.h"
 // === =======================================================================
-
-#include <QDebug>
 
 #include <QCommandLineParser>
 #include <QMap>
@@ -15,27 +14,19 @@
 #include "WikiCategoryReader.h"
 
 // === =======================================================================
-//http://www.sakhalit.com/node/394
-//http://www.warheroes.ru/hero/hero.asp?Hero_id=1891
-// === =======================================================================
 
 TinPigeonApp::TinPigeonApp(QObject* parent)
              :QObject(parent){
-  appExitCode=0;//
-  wikiLanguage = "";
-  categoryToLoad = "";
-  categoryReader = 0;
   startupTimer = 0;
-  networkAccessManager = new QNetworkAccessManager(this);
   c5 = new FiveCatsLogger(FiveCatsLogger::Info);
+  actionPerformer = 0;
 }
 
 // === =======================================================================
 
 TinPigeonApp::~TinPigeonApp() {
   delete startupTimer;
-  delete networkAccessManager;
-  delete categoryReader;
+  delete actionPerformer;
   delete c5;
 }
 
@@ -51,35 +42,33 @@ bool TinPigeonApp::processCommandLine() {
   parser.addVersionOption();
 
   // command line options
-  QCommandLineOption categoryOption("category");
-  categoryOption.setDescription("Wiki category to read");
-  categoryOption.setValueName("category");
-  parser.addOption(categoryOption);
-
-  QCommandLineOption wikilangOption("wikilang");
-  wikilangOption.setDescription("Wiki language (\"en\" will be used by default)");
-  wikilangOption.setValueName("wikilang");
-  parser.addOption(wikilangOption);
+  QCommandLineOption actionOption("action");
+  actionOption.setDescription("Some action to perform (wcl, ...)");
+  actionOption.setValueName("action");
+  parser.addOption(actionOption);
 
   c5->initCommandLineParser(parser);
+  ActionWikiCategoryLoader::initCommandLineParser(parser);
 
   // Process the actual command line arguments given by the user
   QCoreApplication* ca = QCoreApplication::instance();
   parser.process(*ca);
 
   c5->loadCommandLineParser(parser);
+  QString actionStr = parser.value(actionOption);
 
-  categoryToLoad = parser.value(categoryOption);
-  wikiLanguage = parser.value(wikilangOption);
-  if (categoryToLoad.isEmpty()) {
+  if (actionStr == "wcl" ) {
+    actionPerformer = new ActionWikiCategoryLoader(this);
+  }
+  else if (actionStr.isEmpty() ) {
+    c5w(c5, "Action must be specified");
     result = false;
-    c5c(c5, "ERROR: wiki category was not specified");
+  }
+
+  if (result) {
+    result = actionPerformer->loadCommandLineParser(parser);
   }
   else {
-    c5d(c5,  "category is " + categoryToLoad);
-  }
-
-  if (!result) {
     c5i(c5,  parser.helpText() );
   }
 
@@ -102,20 +91,30 @@ void TinPigeonApp::startEveryting() {
   delete startupTimer;
   startupTimer =0;
 
-  categoryReader = new WikiCategoryReader(networkAccessManager, this);
-  categoryReader->setCategory(categoryToLoad);
-  if (!wikiLanguage.isEmpty()) {
-    categoryReader->setWiki(wikiLanguage);
-  }
-  connect(categoryReader, SIGNAL(finished()), this, SLOT(processCategories()));
+  actionPerformer->setLogger(c5);
 
-  bool result = categoryReader->start() ;
-
-  if (!result) {
-    c5c(c5, "ERROR: at start: " + categoryReader->getErrorMessage() );
-    delete categoryReader;
-    categoryReader = 0;
+  connect(actionPerformer, SIGNAL(actionDone()), this, SLOT(processActionResult()));
+  bool started = actionPerformer->startAction() ;
+  if (!started) {
+    c5c(c5, "ERROR: at start: " + actionPerformer->getErrorMessage() );
+    delete actionPerformer;
+    actionPerformer = 0;
   }
+}
+
+// === =======================================================================
+
+void TinPigeonApp::processActionResult() {
+  c5t(c5, __c5_MN__ , "here");
+
+  const QString em = actionPerformer->getErrorMessage();
+  if (!em.isEmpty()) {
+    c5w(c5, __c5_MN__, "ERROR: " + em);
+    QCoreApplication::exit(1);
+    return;
+  }
+
+  QCoreApplication::exit(0);
 }
 
 // === =======================================================================
@@ -126,28 +125,7 @@ int TinPigeonApp::getAppExitCode() const {
 
 // === =======================================================================
 
-void TinPigeonApp::processCategories() {
-  c5d(c5, __c5_MN__ , "here");
 
-  const QString em = categoryReader->getErrorMessage();
-  if (!em.isEmpty()) {
-    c5w(c5, __c5_MN__, "ERROR: " + em);
-    QCoreApplication::exit(1);
-    return;
-  }
 
-  QList<WikiCategoryElement> wceList = categoryReader->getCategoryElements();
-  c5d(c5, __c5_MN__,  QString("got %1 elements").arg( wceList.count() ));
-
-  QList<WikiCategoryElement>::const_iterator wceci;
-  for (wceci = wceList.constBegin(); wceci != wceList.constEnd(); ++wceci) {
-    c5d(c5, "  " + wceci->pageId + "  as " + wceci->title);
-  }
-
-  delete categoryReader;
-  categoryReader = 0;
-
-  QCoreApplication::exit(0);
-}
-
+// === =======================================================================
 // === =======================================================================

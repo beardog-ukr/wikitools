@@ -1,0 +1,8 @@
+{
+    "servedby": "mw1284",
+    "error": {
+        "code": "cminvalidcategory",
+        "info": "The category name you entered is not valid",
+        "*": "See https://en.wikipedia.org/w/api.php for API usage"
+    }
+}

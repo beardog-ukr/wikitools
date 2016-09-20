@@ -12,17 +12,17 @@ MOC_DIR = build/moc
 OBJECTS_DIR = build/obj
 DESTDIR = build/bin
 
+RESOURCES = ../../src/engineTest/rc/TestWikiCategoryReader.qrc
+
 INCLUDEPATH += "../../src/engine/cpp/"
 LIBS += ../engine/build/bin/libTinPigeon.a
 
+INCLUDEPATH += "../../src/FiveCatsLogger/cpp/"
+LIBS += "../../src/FiveCatsLogger/bin/libFiveCatsLogger.a"
+
 HEADERS =
-HEADERS += ../../src/engineTest/cpp/TestBasicHttpReader.h
-HEADERS += ../../src/engineTest/cpp/TestSimplePageReader.h
-HEADERS += ../../src/engineTest/cpp/TestWikiCategoryReader.h
-HEADERS += ../../src/engineTest/cpp/TestWikiExtLinksReader.h
+HEADERS += ../../src/engineTest/cpp/TestEngine.h
 
 SOURCES =  ../../src/engineTest/cpp/TestMain.cpp
-SOURCES += ../../src/engineTest/cpp/TestBasicHttpReader.cpp
-SOURCES += ../../src/engineTest/cpp/TestSimplePageReader.cpp
+SOURCES += ../../src/engineTest/cpp/TestEngine.cpp
 SOURCES += ../../src/engineTest/cpp/TestWikiCategoryReader.cpp
-SOURCES += ../../src/engineTest/cpp/TestWikiExtLinksReader.cpp

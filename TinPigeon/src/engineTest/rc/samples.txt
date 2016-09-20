@@ -1,0 +1,8 @@
+sample 1: long category example Category:2012 Summer Olympics
+
+sample 2: short category example Category:Recipients of the Order For Courage, 3rd class
+
+sample 3: Ella Smith (actress)
+
+
+When the API was designed in 2006, XML was cool, so the API was primarily designed for XML output. Other output formats seem to have been added as an afterthought. In the years that followed, the world (or most of it, anyway), realized XML is an inflexible piece of garbage and moved to JSON. However, we're still stuck with the legacy of having to support XML which means that 1) we can't do certain things in JSON because they can't be translated to XML and 2) we have things like the * thing that look good in XML and look like crap in every other format on the planet.

@@ -53,6 +53,8 @@ bool BasicHttpReader::start() {
     return result;
   }
 
+  receivedData.clear();
+
   reply = makeRequest();
   if (reply) {
     connect(reply, SIGNAL(finished()), this, SLOT(processReplyFinished()));
@@ -72,7 +74,7 @@ bool BasicHttpReader::start() {
 
 void BasicHttpReader::processReplyReadyRead() {
   //
-  c5d(c5, __c5_MN__, "here");
+  c5t(c5, __c5_MN__, "here");
   if (reply) {
     receivedData.append( reply->readAll() ) ;
   }
@@ -89,7 +91,7 @@ void BasicHttpReader::processReplyFinished() {
   //qDebug() << reply->header(QNetworkRequest::ContentTypeHeader).toString();
   //qDebug() << reply->header(QNetworkRequest::LastModifiedHeader).toDateTime().toString();
   //qDebug() << reply->header(QNetworkRequest::ContentLengthHeader).toULongLong();
-  c5d(c5, __c5_MN__, "http reply " + reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString() );
+  c5t(c5, __c5_MN__, "http reply " + reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString() );
 
   if (reply->error()) {
     errorMessage = QString("Download failed: %1 (%2)")
@@ -108,7 +110,7 @@ void BasicHttpReader::processReplyFinished() {
   if (errorMessage.isEmpty()) {
     bool tboo = processReceivedData();
     if (!tboo) {
-      qDebug() << "reply was " << reply->url().toString() ;
+      c5d(c5, __c5_MN__, "reply was " + reply->url().toString() );
     }
   }
 
@@ -126,9 +128,8 @@ QByteArray BasicHttpReader::getReceivedData() const {
 
 // === =======================================================================
 
-bool BasicHttpReader::processReceivedData() {
-  //nothing to do here; should be reimplemented in other classes
-  return true;
+bool BasicHttpReader::hasError() const {
+  return !errorMessage.isEmpty();
 }
 
 // === =======================================================================

@@ -1,0 +1,12 @@
+Wiki text for "Ella Smith (actress)"
+
+
+/w/api.php
+?
+action=parse
+&
+format=json
+&
+page=Ella+Smith+(actress)
+&
+prop=wikitext

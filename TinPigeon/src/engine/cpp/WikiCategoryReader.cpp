@@ -19,10 +19,37 @@
 // === =======================================================================
 // === =======================================================================
 
+WikiCategoryReader::WikiCategoryReader()
+                   :BasicHttpReader(0,0) {
+  setupAll();
+}
+
 WikiCategoryReader::WikiCategoryReader(QNetworkAccessManager* nam, QObject* parent)
                :BasicHttpReader(nam,parent) {
+  setupAll();
+}
+
+// === =======================================================================
+
+void WikiCategoryReader::setupAll() {
   category = "";
   langCode = "en";
+  recordsLimit = -1;
+  currentContinueId = "";
+  nextContinueId = "";
+}
+
+// === =======================================================================
+
+bool WikiCategoryReader::setContinueId(const QString& cid) {
+  currentContinueId = cid;
+  return true;
+}
+
+// === =======================================================================
+
+QString WikiCategoryReader::getNextContinueId() const {
+  return nextContinueId;
 }
 
 // === =======================================================================
@@ -47,8 +74,8 @@ bool WikiCategoryReader::setCategory(const QString& categoryStr) {
 
 // === =======================================================================
 
-QList<WikiCategoryElement> WikiCategoryReader::getCategoryElements() const {
-  return elements;
+QStringList WikiCategoryReader::getCategoryTitles() const {
+  return titles;
 }
 
 // === =======================================================================
@@ -56,19 +83,22 @@ QList<WikiCategoryElement> WikiCategoryReader::getCategoryElements() const {
 QNetworkReply* WikiCategoryReader::makeRequest() {
   const QString endpointTemplate = "https://%1.wikipedia.org/w/api.php" ;
   const QString endpoint = endpointTemplate.arg(langCode);
+  c5t(c5, __c5_MN__, "Endpoint is " + endpoint);
 
   QUrl url(endpoint);
 
   QUrlQuery query ;
-  // this is an example:
-  //  /w/api.php?action=query&format=json&uselang=user&list=categorymembers&
-  //     cmtitle=Category%3ARecipients+of+the+Order+For+Courage%2C+3rd+class
-
   query.addQueryItem("action", "query");
   query.addQueryItem("format", "json");
   query.addQueryItem("uselang", "user");
   query.addQueryItem("list","categorymembers");
   query.addQueryItem("cmtitle", category);
+  if (!currentContinueId.isEmpty()) {
+    query.addQueryItem("cmcontinue", currentContinueId);
+  }
+  if (recordsLimit>0) {
+    query.addQueryItem("cmlimit", QString::number(recordsLimit));
+  }
 
   url.setQuery(query);
 
@@ -78,16 +108,13 @@ QNetworkReply* WikiCategoryReader::makeRequest() {
 // === =======================================================================
 
 bool WikiCategoryReader::processReceivedData() {
-  bool result = true;
-
-  // QString tmps = QString::fromUtf8(receivedData);
-  // qDebug() << "got :";
-  // qDebug() << tmps;
+  c5d(c5, __c5_MN__,  QString::fromUtf8(receivedData));
 
   QJsonParseError jperr;
   QJsonDocument doc = QJsonDocument::fromJson(receivedData, &jperr);
   if (jperr.error!=QJsonParseError::NoError) {
-    errorMessage = jperr.errorString();
+    errorMessage = "JSON ERROR: " + jperr.errorString();
+    c5d(c5, __c5_MN__, errorMessage);
     return false;
   }
 
@@ -97,32 +124,29 @@ bool WikiCategoryReader::processReceivedData() {
     return false;
   }
 
-  if (obj.contains("error")) {
-    QJsonValue ev = obj.value("error");
-    if (!ev.isObject()) {
-      errorMessage = "Unexpected error content";
-      return false;
-    }
-    QJsonObject evobj = ev.toObject();
-    QString ecode = "";
-    if (evobj.contains("code")) {
-      ecode = evobj.value("code").toString();
-    }
-    QString einfo = "";
-    if (evobj.contains("info")) {
-      einfo = evobj.value("info").toString();
-    }
-
-    errorMessage = QString("Received error: %2 (%1)").arg(ecode, einfo);
+  bool hasDirectError = readErrorFromJsonDoc(&obj);
+  if (hasDirectError) {
     return false;
   }
 
-  if (!obj.contains("query")) {
+  if (!readContinueId(&obj)) {
+    return false;
+  }
+
+  return readElementsFromJsonDoc(&obj, titles );
+}
+
+// === =======================================================================
+
+bool WikiCategoryReader::readElementsFromJsonDoc(QJsonObject* obj, QStringList& elements) {
+  elements.clear();
+
+  if (!obj->contains("query")) {
     errorMessage = "Failed to get expected \"query\" object";
     return false;
   }
 
-  QJsonValue qobjValue = obj.value("query");
+  QJsonValue qobjValue = obj->value("query");
   if (!qobjValue.isObject()) {
     errorMessage = "Failed to get expected \"query\" as object";
     return false;
@@ -136,36 +160,107 @@ bool WikiCategoryReader::processReceivedData() {
   }
 
   QJsonArray cmarr = cmarrValue.toArray();
+  if (cmarr.isEmpty()) {
+    errorMessage = "Received empty categorymembers array";
+    return false;
+  }
   QJsonArray::const_iterator cmi;
   for (cmi = cmarr.constBegin(); cmi != cmarr.constEnd(); ++cmi) {
-    WikiCategoryElement wce;
-
     QJsonObject cmo = cmi->toObject();
     QJsonValue tjv;
-    tjv = cmo.value("pageid");
-    if (tjv.type()!=QJsonValue::Double) {
-      wce.pageId = "";
-      result = false;
-      errorMessage = "Received bad \"pageid\" element in \"query\\categorymembers\"";
-    }
-    else {
-      wce.pageId = QString::number(tjv.toInt());
-    }
-
     tjv = cmo.value("title");
     if (tjv.type()!=QJsonValue::String) {
-      wce.title = "";
-      result = false;
       errorMessage = "Received bad \"title\" element in \"query\\categorymembers\"";
+      return false;
     }
     else {
-      wce.title = tjv.toString();
+      elements.append(tjv.toString());
     }
-
-    elements.append(wce);
   }
 
-  return result;
+  return true;
 }
 
+// === =======================================================================
+
+bool WikiCategoryReader::readErrorFromJsonDoc(QJsonObject* obj) {
+
+  if (!obj->contains("error")) {
+    errorMessage = "";
+    return false;
+  }
+
+  // Else the method will return true even if some unexpected structure
+  //of error message
+
+  QJsonValue ev = obj->value("error");
+  if (!ev.isObject()) {
+    errorMessage = "Unexpected error content";
+    return true;
+  }
+
+  QJsonObject evobj = ev.toObject();
+  QString ecode = "";
+  if (evobj.contains("code")) {
+    ecode = evobj.value("code").toString();
+  }
+  QString einfo = "";
+  if (evobj.contains("info")) {
+    einfo = evobj.value("info").toString();
+  }
+
+  if (ecode.isEmpty() && einfo.isEmpty()) {
+    errorMessage = "Bad error message format";
+  }
+
+  errorMessage = QString("Received error: %2 (%1)").arg(ecode, einfo);
+  return true;
+}
+
+
+// === =======================================================================
+
+bool WikiCategoryReader::readContinueId(QJsonObject* jsonObj) {
+  nextContinueId = "";
+
+  if (!jsonObj->contains("continue")) {
+    return true;
+  }
+
+  QJsonValue cv = jsonObj->value("continue");
+  if (!cv.isObject()) {
+    errorMessage = "Unexpected continue content (not an object)";
+    return false;
+  }
+
+  QJsonObject cvobj = cv.toObject();
+
+  if (cvobj.contains("cmcontinue")) {
+    nextContinueId = cvobj.value("cmcontinue").toString();
+  }
+  else {
+    errorMessage = "Unexpected continue content (no cmcontinue)";
+    return false;
+  }
+
+  return true;
+}
+
+void WikiCategoryReader::resetCategoryTitles() {
+  titles.clear();
+}
+
+// === =======================================================================
+
+bool WikiCategoryReader::setRecordsLimit(const int limit) {
+  if (limit<=0) {
+    return false ;
+  }
+
+  recordsLimit = limit;
+
+  return true;
+}
+
+// === =======================================================================
 // === =======================================================================

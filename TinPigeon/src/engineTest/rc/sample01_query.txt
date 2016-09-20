@@ -1,0 +1,96 @@
+Requests for "Category:2012 Summer Olympics", cmlimit=30
+Have tomake three requests (more than 70 pages in category total)
+
+First query:
+/w/api.php?action=query&format=json&list=categorymembers&cmtitle=Category%3A2012+Summer+Olympics&cmlimit=30
+
+Second query:
+/w/api.php?action=query&format=json&list=categorymembers&cmtitle=Category%3A2012+Summer+Olympics&cmcontinue=page%7C3d43412d434104433d573f45372b0433273f2f4b0427412d04452749273d573f45372b0433273f2f4b04272b4d0412822e110133018f808f7f8f7d8f7c8f818f08%7C8891230&cmlimit=30
+
+
+Third query:
+/w/api.php?action=query&format=json&list=categorymembers&cmtitle=Category%3A2012+Summer+Olympics&cmcontinue=page%7C4b573f4535434157044331042949374d374b35043f4f4b372b034227044b573f4535434157044331042949374d374b35043f4f4b372b040ab5273d294f3f0ab70141018f7b8f7f8f818f858f7b8f7f8f10%7C36693861&cmlimit=30
+
+
+Detailed first:
+/w/api.php
+?
+action=query
+&
+format=json
+&
+list=categorymembers
+&
+cmtitle=Category%3A2012+Summer+Olympics
+&
+cmlimit=30
+
+
+Detailed second:
+/w/api.php
+?
+action=query
+&
+format=json
+&
+list=categorymembers
+&
+cmtitle=Category%3A2012+Summer+Olympics
+&
+cmcontinue=page%7C3d43412d434104433d573f45372b0433273f2f4b0427412d04452749273d573f45372b0433273f2f4b04272b4d0412822e110133018f808f7f8f7d8f7c8f818f08%7C8891230
+&
+cmlimit=30
+
+
+
+Detailed third:
+/w/api.php
+?
+action=query
+&
+format=json
+&
+list=categorymembers
+&
+cmtitle=Category%3A2012+Summer+Olympics
+&
+cmcontinue=page%7C4b573f4535434157044331042949374d374b35043f4f4b372b034227044b573f4535434157044331042949374d374b35043f4f4b372b040ab5273d294f3f0ab70141018f7b8f7f8f818f858f7b8f7f8f10%7C36693861
+&
+cmlimit=30
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/w/api.php
+?
+action=query
+&
+format=json
+&
+prop=
+&
+list=categorymembers
+&
+titles=Project%3AarticleA%7Carticle_B&cmtitle=Category%3A2012+Summer+Olympics
+&
+cmcontinue=page%7C4b573f4535434157044331042949374d374b35043f4f4b372b034227044b573f4535434157044331042949374d374b35043f4f4b372b040ab5273d294f3f0ab70141018f7b8f7f8f818f858f7b8f7f8f10%7C36693861
+&
+cmlimit=30
+
+

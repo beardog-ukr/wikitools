@@ -1,14 +1,16 @@
+#ifndef __TinPigeonApp__
+#define __TinPigeonApp__
+
 #include <QObject>
 #include <string>
 
-//class BasicHttpReader;
-//class SimplePageReader;
-class WikiCategoryReader;
-
+class ActionBasic;
 class FiveCatsLogger;
 
 class QTimer;
 class QNetworkAccessManager;
+
+#include <QStringList>
 
 class TinPigeonApp : public QObject
 {
@@ -26,19 +28,17 @@ public:
   int getAppExitCode() const;
 
 public slots:
-  void processCategories();
+  void processActionResult();
   void startEveryting();
 
 protected:
-  int appExitCode;
-
-  QString categoryToLoad;
-  QString wikiLanguage;
-
-  WikiCategoryReader* categoryReader;
+//  void processResultList();
+  ActionBasic* actionPerformer;
 
   QTimer* startupTimer;
-  QNetworkAccessManager* networkAccessManager;
 
+  int appExitCode ;
   FiveCatsLogger* c5;
 };
+
+#endif
