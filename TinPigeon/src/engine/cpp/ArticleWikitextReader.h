@@ -10,24 +10,33 @@
 class ArticleWikitextReader : public BasicHttpReader
 {
   Q_OBJECT
-
+  friend class TestEngine;
 public:
   ArticleWikitextReader(QNetworkAccessManager* nam, QObject* parent =0);
   virtual ~ArticleWikitextReader();
 
-  bool setWiki(const QString& langCode);
-  bool setPageId(const int& category);
+  void resetWikitext();
+  QString getWikitext() const;
+
+  void setWiki(const QString& langCode);
+  void setPageTitle(const QString& pageTitle);
+  QString getPageTitle() const;
 
   QStringList getExternalLinks() const;
 
 protected :
+  ArticleWikitextReader();
+  void setupAll() ;
+
   virtual QNetworkReply* makeRequest();
   virtual bool processReceivedData();
 
-  QString langCode;
-  int pageId;
+  bool readWikitextFromJson(QJsonObject* rootObj);
 
-  QStringList externalLinks;
+  QString langCode;
+  QString pageTitle;
+
+  QString wikitext;
 };
 
 // === =======================================================================

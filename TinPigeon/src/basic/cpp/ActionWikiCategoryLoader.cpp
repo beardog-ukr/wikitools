@@ -22,6 +22,7 @@ ActionWikiCategoryLoader::ActionWikiCategoryLoader(QObject *parent)
   resultFileName = "" ;
   categoryReader = 0;
   networkAccessManager = 0; //
+  recLimit = -1;
 }
 
 // === =======================================================================
@@ -49,6 +50,10 @@ void ActionWikiCategoryLoader::initCommandLineParser(QCommandLineParser& parser)
   fnOption.setDescription("File to save the downloaded list (by default it will be printed to console)");
   fnOption.setValueName("wcl_file");
   parser.addOption(fnOption);
+
+  QCommandLineOption rlOption("wcl_lim",
+    "File to save the downloaded list (by default it will be printed to console)", "wcl_lim");
+  parser.addOption(rlOption);
 }
 
 // === =======================================================================
@@ -69,6 +74,11 @@ bool ActionWikiCategoryLoader::loadCommandLineParser(const QCommandLineParser& p
   tmps = parser.value("wcl_file");
   if (!tmps.isEmpty()) {
     resultFileName = tmps ;
+  }
+
+  tmps = parser.value("wcl_lim");
+  if (!tmps.isEmpty()) {
+    recLimit = tmps.toInt() ;
   }
 
   if (categoryToLoad.isEmpty()) {
@@ -93,7 +103,7 @@ bool ActionWikiCategoryLoader::startAction() {
   categoryReader->setLogger(c5) ;
   categoryReader->setWiki(wikiLanguage) ;
   categoryReader->setCategory(categoryToLoad) ;
-  categoryReader->setRecordsLimit(30) ;
+  categoryReader->setRecordsLimit(recLimit) ;
   connect(categoryReader, SIGNAL(finished()), this, SLOT(processResult()) ) ;
 
   bool started = categoryReader->start();

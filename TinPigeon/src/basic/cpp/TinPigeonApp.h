@@ -28,11 +28,11 @@ public:
   int getAppExitCode() const;
 
 public slots:
-  void processActionResult();
   void startEveryting();
+  void processActionResult();
+  void processActionFailure();
 
 protected:
-//  void processResultList();
   ActionBasic* actionPerformer;
 
   QTimer* startupTimer;

@@ -10,13 +10,11 @@ class QCommandLineParser;
 class ActionBasic: public QObject
 {
   Q_OBJECT
-
-//  friend class TestBasic;
+  friend class TestBasic;
 public:
   ActionBasic(QObject *parent = 0);
   virtual ~ActionBasic();
 
-//  virtual bool prepareToStart();
   virtual bool startAction() =0;
 
   //static void initCommandLineParser(QCommandLineParser& parser);
@@ -27,6 +25,7 @@ public:
 
 signals:
   void actionDone();
+  void actionFailure();
 
 protected:
 

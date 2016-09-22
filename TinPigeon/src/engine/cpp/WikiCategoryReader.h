@@ -45,7 +45,7 @@ protected :
   QString nextContinueId;
 
   bool readElementsFromJsonDoc(QJsonObject* rootObj, QStringList& elements);
-  bool readErrorFromJsonDoc(QJsonObject* rootObj);
+//  bool readErrorFromJsonDoc(QJsonObject* rootObj);
   bool readContinueId(QJsonObject* rootObj);
 };
 

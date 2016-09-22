@@ -22,11 +22,14 @@ INCLUDEPATH += "../../src/FiveCatsLogger/cpp/"
 LIBS += "../../src/FiveCatsLogger/bin/libFiveCatsLogger.a"
 
 HEADERS =
+HEADERS += ../../src/engine/cpp/ArticleWikitextReader.h
 HEADERS += ../../src/engine/cpp/BasicHttpReader.h
+HEADERS += ../../src/engine/cpp/ErrorResponseProcessor.h
 HEADERS += ../../src/engine/cpp/WikiCategoryReader.h
-#HEADERS += ../../src/engine/cpp/WikiExtLinksReader.h
 
 SOURCES =
+SOURCES += ../../src/engine/cpp/ArticleWikitextReader.cpp
 SOURCES += ../../src/engine/cpp/BasicHttpReader.cpp
+SOURCES += ../../src/engine/cpp/ErrorResponseProcessor.cpp
 SOURCES += ../../src/engine/cpp/WikiCategoryReader.cpp
-#SOURCES += ../../src/engine/cpp/WikiExtLinksReader.cpp
+

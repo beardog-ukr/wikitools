@@ -49,64 +49,64 @@ void TestEngine::TestWikiCategoryReader_readElementsFromJsonDoc_Empty() {
 
 // ============================================================================
 
-void TestEngine::TestWikiCategoryReader_readErrorFromJsonDoc_NoError() {
-  QByteArray barr;
-  readFile(":/TestWikiCategoryReader/ShortCorrectA.json", barr);
+//void TestEngine::TestWikiCategoryReader_readErrorFromJsonDoc_NoError() {
+//  QByteArray barr;
+//  readFile(":/TestWikiCategoryReader/ShortCorrectA.json", barr);
 
-  QJsonDocument doc = QJsonDocument::fromJson(barr);
-  QJsonObject obj = doc.object();
-  QCOMPARE(obj.isEmpty(), false);
+//  QJsonDocument doc = QJsonDocument::fromJson(barr);
+//  QJsonObject obj = doc.object();
+//  QCOMPARE(obj.isEmpty(), false);
 
-  WikiCategoryReader wcr;
-  QStringList elements ;
-  bool tmpb =  wcr.readErrorFromJsonDoc(&obj);
+//  WikiCategoryReader wcr;
+//  QStringList elements ;
+//  bool tmpb =  wcr.readErrorFromJsonDoc(&obj);
 
-  QCOMPARE(tmpb, false);
-  QCOMPARE(wcr.errorMessage.isEmpty(), true);
-}
-
-// ============================================================================
-
-void TestEngine::TestWikiCategoryReader_readErrorFromJsonDoc_Empty() {
-  QByteArray barr;
-  readFile(":/TestWikiCategoryReader/ShortCorrectA.json", barr);
-
-  QJsonDocument doc = QJsonDocument::fromJson(barr);
-  QJsonObject obj = doc.object();
-  QCOMPARE(obj.isEmpty(), false);
-
-  WikiCategoryReader wcr;
-  QStringList elements ;
-  bool tmpb =  wcr.readErrorFromJsonDoc(&obj);
-
-  QCOMPARE(tmpb, false);
-  QCOMPARE(wcr.errorMessage.isEmpty(), true);
-}
+//  QCOMPARE(tmpb, false);
+//  QCOMPARE(wcr.errorMessage.isEmpty(), true);
+//}
 
 // ============================================================================
 
-void TestEngine::TestWikiCategoryReader_readErrorFromJsonDoc_BasicA() {
-  QByteArray barr;
-  readFile(":/TestWikiCategoryReader/ErrorA.json", barr);
+//void TestEngine::TestWikiCategoryReader_readErrorFromJsonDoc_Empty() {
+//  QByteArray barr;
+//  readFile(":/TestWikiCategoryReader/ShortCorrectA.json", barr);
 
-  QJsonDocument doc = QJsonDocument::fromJson(barr);
-  QJsonObject obj = doc.object();
-  QCOMPARE(obj.isEmpty(), false);
+//  QJsonDocument doc = QJsonDocument::fromJson(barr);
+//  QJsonObject obj = doc.object();
+//  QCOMPARE(obj.isEmpty(), false);
 
-  WikiCategoryReader wcr;
-  QStringList elements ;
-  bool tmpb =  wcr.readErrorFromJsonDoc(&obj);
+//  WikiCategoryReader wcr;
+//  QStringList elements ;
+//  bool tmpb =  wcr.readErrorFromJsonDoc(&obj);
 
-  QCOMPARE(tmpb, true);
-  QCOMPARE(wcr.errorMessage,
-           QString("Received error: The category name you entered is not valid (cminvalidcategory)"));
-}
+//  QCOMPARE(tmpb, false);
+//  QCOMPARE(wcr.errorMessage.isEmpty(), true);
+//}
 
 // ============================================================================
 
-void TestEngine::TestWikiCategoryReader_readErrorFromJsonDoc_BadJsonA() {
-  //TODO: implement later, maybe use error message for wikitext
-}
+//void TestEngine::TestWikiCategoryReader_readErrorFromJsonDoc_BasicA() {
+//  QByteArray barr;
+//  readFile(":/TestWikiCategoryReader/ErrorA.json", barr);
+
+//  QJsonDocument doc = QJsonDocument::fromJson(barr);
+//  QJsonObject obj = doc.object();
+//  QCOMPARE(obj.isEmpty(), false);
+
+//  WikiCategoryReader wcr;
+//  QStringList elements ;
+//  bool tmpb =  wcr.readErrorFromJsonDoc(&obj);
+
+//  QCOMPARE(tmpb, true);
+//  QCOMPARE(wcr.errorMessage,
+//           QString("Received error: The category name you entered is not valid (cminvalidcategory)"));
+//}
+
+// ============================================================================
+
+//void TestEngine::TestWikiCategoryReader_readErrorFromJsonDoc_BadJsonA() {
+//  //TODO: implement later, maybe use error message for wikitext
+//}
 
 // ============================================================================
 

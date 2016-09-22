@@ -1,5 +1,6 @@
 #include "WikiCategoryReader.h"
 #include "FiveCatsLogger.h"
+#include "ErrorResponseProcessor.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -23,6 +24,8 @@ WikiCategoryReader::WikiCategoryReader()
                    :BasicHttpReader(0,0) {
   setupAll();
 }
+
+// === =======================================================================
 
 WikiCategoryReader::WikiCategoryReader(QNetworkAccessManager* nam, QObject* parent)
                :BasicHttpReader(nam,parent) {
@@ -124,8 +127,11 @@ bool WikiCategoryReader::processReceivedData() {
     return false;
   }
 
-  bool hasDirectError = readErrorFromJsonDoc(&obj);
-  if (hasDirectError) {
+  ErrorResponseProcessor erp;
+  erp.loadJson(&obj);
+  if (erp.hasError()) {
+    errorMessage = QString("Received error: %2 (%1)")
+                      .arg(erp.errorCode(), erp.errorInfo());
     return false;
   }
 
@@ -183,39 +189,39 @@ bool WikiCategoryReader::readElementsFromJsonDoc(QJsonObject* obj, QStringList& 
 
 // === =======================================================================
 
-bool WikiCategoryReader::readErrorFromJsonDoc(QJsonObject* obj) {
+//bool WikiCategoryReader::readErrorFromJsonDoc(QJsonObject* obj) {
 
-  if (!obj->contains("error")) {
-    errorMessage = "";
-    return false;
-  }
+//  if (!obj->contains("error")) {
+//    errorMessage = "";
+//    return false;
+//  }
 
-  // Else the method will return true even if some unexpected structure
-  //of error message
+//  // Else the method will return true even if some unexpected structure
+//  //of error message
 
-  QJsonValue ev = obj->value("error");
-  if (!ev.isObject()) {
-    errorMessage = "Unexpected error content";
-    return true;
-  }
+//  QJsonValue ev = obj->value("error");
+//  if (!ev.isObject()) {
+//    errorMessage = "Unexpected error content";
+//    return true;
+//  }
 
-  QJsonObject evobj = ev.toObject();
-  QString ecode = "";
-  if (evobj.contains("code")) {
-    ecode = evobj.value("code").toString();
-  }
-  QString einfo = "";
-  if (evobj.contains("info")) {
-    einfo = evobj.value("info").toString();
-  }
+//  QJsonObject evobj = ev.toObject();
+//  QString ecode = "";
+//  if (evobj.contains("code")) {
+//    ecode = evobj.value("code").toString();
+//  }
+//  QString einfo = "";
+//  if (evobj.contains("info")) {
+//    einfo = evobj.value("info").toString();
+//  }
 
-  if (ecode.isEmpty() && einfo.isEmpty()) {
-    errorMessage = "Bad error message format";
-  }
+//  if (ecode.isEmpty() && einfo.isEmpty()) {
+//    errorMessage = "Bad error message format";
+//  }
 
-  errorMessage = QString("Received error: %2 (%1)").arg(ecode, einfo);
-  return true;
-}
+//  errorMessage = QString("Received error: %2 (%1)").arg(ecode, einfo);
+//  return true;
+//}
 
 
 // === =======================================================================

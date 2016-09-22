@@ -1,6 +1,7 @@
 #include "TinPigeonApp.h"
 #include "ActionBasic.h"
 #include "ActionWikiCategoryLoader.h"
+#include "ActionWikitextREChecker.h"
 // === =======================================================================
 
 #include <QCommandLineParser>
@@ -43,12 +44,13 @@ bool TinPigeonApp::processCommandLine() {
 
   // command line options
   QCommandLineOption actionOption("action");
-  actionOption.setDescription("Some action to perform (wcl, ...)");
+  actionOption.setDescription("Some action to perform (wcl, recp)");
   actionOption.setValueName("action");
   parser.addOption(actionOption);
 
   c5->initCommandLineParser(parser);
   ActionWikiCategoryLoader::initCommandLineParser(parser);
+  ActionWikitextREChecker::initCommandLineParser(parser);
 
   // Process the actual command line arguments given by the user
   QCoreApplication* ca = QCoreApplication::instance();
@@ -59,6 +61,9 @@ bool TinPigeonApp::processCommandLine() {
 
   if (actionStr == "wcl" ) {
     actionPerformer = new ActionWikiCategoryLoader(this);
+  }
+  else if (actionStr == "recp" ) {
+    actionPerformer = new ActionWikitextREChecker(this);
   }
   else if (actionStr.isEmpty() ) {
     c5w(c5, "Action must be specified");
@@ -94,6 +99,7 @@ void TinPigeonApp::startEveryting() {
   actionPerformer->setLogger(c5);
 
   connect(actionPerformer, SIGNAL(actionDone()), this, SLOT(processActionResult()));
+  connect(actionPerformer, SIGNAL(actionFailure()), this, SLOT(processActionFailure()));
   bool started = actionPerformer->startAction() ;
   if (!started) {
     c5c(c5, "ERROR: at start: " + actionPerformer->getErrorMessage() );
@@ -109,13 +115,29 @@ void TinPigeonApp::processActionResult() {
 
   const QString em = actionPerformer->getErrorMessage();
   if (!em.isEmpty()) {
-    c5w(c5, __c5_MN__, "ERROR: " + em);
+    c5w(c5, __c5_MN__, "Action finished successfully, but with error message: " + em);
     QCoreApplication::exit(1);
-    return;
   }
 
   QCoreApplication::exit(0);
 }
+
+// === =======================================================================
+
+void TinPigeonApp::processActionFailure() {
+  c5t(c5, __c5_MN__ , "here");
+
+  const QString em = actionPerformer->getErrorMessage();
+  if (em.isEmpty()) {
+    c5w(c5, __c5_MN__, "ERROR: action failed for unknown reason");
+  }
+  else {
+    c5w(c5, __c5_MN__, em);
+  }
+
+  QCoreApplication::exit(1);
+}
+
 
 // === =======================================================================
 

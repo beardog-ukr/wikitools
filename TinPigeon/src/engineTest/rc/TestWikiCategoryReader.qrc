@@ -1,9 +1,15 @@
 <!DOCTYPE RCC><RCC version="1.0">
+
 <qresource prefix="/TestWikiCategoryReader">
   <file alias="ShortCorrectA.json">TestWikiCategoryReader_ShortCorrectA.json</file>
   <file alias="ErrorA.json">TestWikiCategoryReader_ErrorA.json</file>
   <file alias="Empty.json">TestWikiCategoryReader_Empty.json</file>
-  <file alias="LongFirstA.json">TestWikiCategoryReader_LongFirstA.json</file>
-  
+  <file alias="LongFirstA.json">TestWikiCategoryReader_LongFirstA.json</file>  
 </qresource>
+
+<qresource prefix="/TestArticleWikitextReader">  
+  <file alias="Basic.json">TestArticleWikitextReader_Basic.json</file>  
+  <file alias="ErrorA.json">TestArticleWikitextReader_ErrorA.json</file>  
+</qresource>
+
 </RCC>

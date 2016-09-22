@@ -36,6 +36,7 @@ protected:
   QString categoryToLoad;
   QString wikiLanguage;
   QString resultFileName;
+  int recLimit;
 
   QStringList categoryTitles;
 

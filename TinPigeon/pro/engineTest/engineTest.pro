@@ -25,4 +25,6 @@ HEADERS += ../../src/engineTest/cpp/TestEngine.h
 
 SOURCES =  ../../src/engineTest/cpp/TestMain.cpp
 SOURCES += ../../src/engineTest/cpp/TestEngine.cpp
+SOURCES += ../../src/engineTest/cpp/TestArticleWikitextReader.cpp
+SOURCES += ../../src/engineTest/cpp/TestErrorResponseProcessor.cpp
 SOURCES += ../../src/engineTest/cpp/TestWikiCategoryReader.cpp

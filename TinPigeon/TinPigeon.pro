@@ -11,7 +11,11 @@ basic.subdir = pro/basic
 basic.target = basic-app
 basic.depends = engine-lib
 
-SUBDIRS =  engine engineTest basic 
+basicTest.subdir = pro/basicTest
+basicTest.target = basic-test-app
+basicTest.depends = engine-lib
+
+SUBDIRS =  engine engineTest basic basicTest
 
 message(Qt version: $$[QT_VERSION])
 message(Qt is installed in $$[QT_INSTALL_PREFIX])
