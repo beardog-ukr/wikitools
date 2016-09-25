@@ -35,6 +35,3 @@ SOURCES += ../../src/basicTest/cpp/TestActionWikiCategoryLoader.cpp
 SOURCES += ../../src/basic/cpp/ActionBasic.cpp
 SOURCES += ../../src/basic/cpp/ActionWikiCategoryLoader.cpp
 SOURCES += ../../src/basic/cpp/ActionWikitextREChecker.cpp
-
-
-

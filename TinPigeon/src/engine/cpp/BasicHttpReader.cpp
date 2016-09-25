@@ -44,6 +44,12 @@ void BasicHttpReader::setLogger(FiveCatsLogger* c5p) {
 
 // === =======================================================================
 
+QVariant BasicHttpReader::getCookieHeader() const {
+  return cookieHeader;
+}
+
+// === =======================================================================
+
 bool BasicHttpReader::start() {
   bool result = true;
 
@@ -92,6 +98,18 @@ void BasicHttpReader::processReplyFinished() {
   //qDebug() << reply->header(QNetworkRequest::LastModifiedHeader).toDateTime().toString();
   //qDebug() << reply->header(QNetworkRequest::ContentLengthHeader).toULongLong();
   c5t(c5, __c5_MN__, "http reply " + reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString() );
+
+  cookieHeader = reply->header(QNetworkRequest::SetCookieHeader);
+
+//  QList<QNetworkReply::RawHeaderPair> rhplist = reply->rawHeaderPairs();
+//  c5d(c5, QString("Got %1 raw headers").arg(rhplist.count()));
+//  QList<QNetworkReply::RawHeaderPair>::const_iterator rhpi = rhplist.constBegin() ;
+//  for (;rhpi!=rhplist.constEnd(); rhpi++) {
+//    QString tmps = QString("%1 : %2").arg(QString(rhpi->first)).arg(QString(rhpi->second)) ;
+//    c5d(c5, tmps);
+//  }
+//  c5d(c5, "== == == == == == == == == == == == ==");
+
 
   if (reply->error()) {
     errorMessage = QString("Download failed: %1 (%2)")

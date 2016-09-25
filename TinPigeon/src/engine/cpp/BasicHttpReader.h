@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QVariant>
 
 class FiveCatsLogger;
 
@@ -21,6 +22,7 @@ public:
   bool hasError() const;
   QString getErrorMessage() const;
   QByteArray getReceivedData() const;
+  QVariant getCookieHeader() const;
 
   virtual bool start();
 
@@ -40,6 +42,7 @@ protected :
   QNetworkReply* reply;
 
   QByteArray receivedData;
+  QVariant cookieHeader;
 
   virtual QNetworkReply* makeRequest() =0;
   virtual bool processReceivedData() =0;

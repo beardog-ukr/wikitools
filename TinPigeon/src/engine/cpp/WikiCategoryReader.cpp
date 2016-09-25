@@ -189,43 +189,6 @@ bool WikiCategoryReader::readElementsFromJsonDoc(QJsonObject* obj, QStringList& 
 
 // === =======================================================================
 
-//bool WikiCategoryReader::readErrorFromJsonDoc(QJsonObject* obj) {
-
-//  if (!obj->contains("error")) {
-//    errorMessage = "";
-//    return false;
-//  }
-
-//  // Else the method will return true even if some unexpected structure
-//  //of error message
-
-//  QJsonValue ev = obj->value("error");
-//  if (!ev.isObject()) {
-//    errorMessage = "Unexpected error content";
-//    return true;
-//  }
-
-//  QJsonObject evobj = ev.toObject();
-//  QString ecode = "";
-//  if (evobj.contains("code")) {
-//    ecode = evobj.value("code").toString();
-//  }
-//  QString einfo = "";
-//  if (evobj.contains("info")) {
-//    einfo = evobj.value("info").toString();
-//  }
-
-//  if (ecode.isEmpty() && einfo.isEmpty()) {
-//    errorMessage = "Bad error message format";
-//  }
-
-//  errorMessage = QString("Received error: %2 (%1)").arg(ecode, einfo);
-//  return true;
-//}
-
-
-// === =======================================================================
-
 bool WikiCategoryReader::readContinueId(QJsonObject* jsonObj) {
   nextContinueId = "";
 

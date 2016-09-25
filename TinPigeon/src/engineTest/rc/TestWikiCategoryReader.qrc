@@ -12,4 +12,9 @@
   <file alias="ErrorA.json">TestArticleWikitextReader_ErrorA.json</file>  
 </qresource>
 
+<qresource prefix="/TokenLoader">  
+  <file alias="Basic.json">TokenLoader_Basic.json</file>  
+  <file alias="Double.json">TokenLoader_Double.json</file>  
+</qresource>
+
 </RCC>

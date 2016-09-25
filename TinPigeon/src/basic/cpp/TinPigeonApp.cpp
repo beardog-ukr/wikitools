@@ -1,7 +1,11 @@
 #include "TinPigeonApp.h"
 #include "ActionBasic.h"
+#include "ActionAuthMetainfoLoader.h"
+#include "ActionLoginPerformer.h"
 #include "ActionWikiCategoryLoader.h"
 #include "ActionWikitextREChecker.h"
+#include "ActionTokenLoader.h"
+
 // === =======================================================================
 
 #include <QCommandLineParser>
@@ -44,13 +48,16 @@ bool TinPigeonApp::processCommandLine() {
 
   // command line options
   QCommandLineOption actionOption("action");
-  actionOption.setDescription("Some action to perform (wcl, recp)");
+  actionOption.setDescription("Some action to perform (ami, wcl, recp)");
   actionOption.setValueName("action");
   parser.addOption(actionOption);
 
   c5->initCommandLineParser(parser);
   ActionWikiCategoryLoader::initCommandLineParser(parser);
   ActionWikitextREChecker::initCommandLineParser(parser);
+  ActionAuthMetainfoLoader::initCommandLineParser(parser) ;
+  ActionTokenLoader::initCommandLineParser(parser);
+  ActionLoginPerformer::initCommandLineParser(parser) ;
 
   // Process the actual command line arguments given by the user
   QCoreApplication* ca = QCoreApplication::instance();
@@ -59,14 +66,24 @@ bool TinPigeonApp::processCommandLine() {
   c5->loadCommandLineParser(parser);
   QString actionStr = parser.value(actionOption);
 
-  if (actionStr == "wcl" ) {
+  if (actionStr == "ami" ) {
+    actionPerformer = new ActionAuthMetainfoLoader(this);
+  }
+  else if (actionStr == "lp" ) {
+    actionPerformer = new ActionLoginPerformer(this);
+  }
+  else if (actionStr == "wcl" ) {
     actionPerformer = new ActionWikiCategoryLoader(this);
   }
   else if (actionStr == "recp" ) {
     actionPerformer = new ActionWikitextREChecker(this);
   }
+  else if (actionStr == "ltl" ) {
+    actionPerformer = new ActionTokenLoader(this);
+  }
   else if (actionStr.isEmpty() ) {
     c5w(c5, "Action must be specified");
+    actionPerformer = 0;
     result = false;
   }
 

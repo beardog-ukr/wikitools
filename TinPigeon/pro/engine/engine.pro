@@ -23,13 +23,18 @@ LIBS += "../../src/FiveCatsLogger/bin/libFiveCatsLogger.a"
 
 HEADERS =
 HEADERS += ../../src/engine/cpp/ArticleWikitextReader.h
+HEADERS += ../../src/engine/cpp/AuthMetainfoLoader.h
 HEADERS += ../../src/engine/cpp/BasicHttpReader.h
 HEADERS += ../../src/engine/cpp/ErrorResponseProcessor.h
+HEADERS += ../../src/engine/cpp/TokenLoader.h
+HEADERS += ../../src/engine/cpp/LoginPerformer.h
 HEADERS += ../../src/engine/cpp/WikiCategoryReader.h
 
 SOURCES =
 SOURCES += ../../src/engine/cpp/ArticleWikitextReader.cpp
+SOURCES += ../../src/engine/cpp/AuthMetainfoLoader.cpp
 SOURCES += ../../src/engine/cpp/BasicHttpReader.cpp
 SOURCES += ../../src/engine/cpp/ErrorResponseProcessor.cpp
+SOURCES += ../../src/engine/cpp/TokenLoader.cpp
+SOURCES += ../../src/engine/cpp/LoginPerformer.cpp
 SOURCES += ../../src/engine/cpp/WikiCategoryReader.cpp
-

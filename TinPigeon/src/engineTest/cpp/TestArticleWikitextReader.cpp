@@ -18,9 +18,8 @@ void TestEngine::ArticleWikitextReader_readWikitextFromJson_BasicA() {
   QCOMPARE(obj.isEmpty(), false);
 
   ArticleWikitextReader awtr;
-  QStringList elements ;
-  bool tmpb =  awtr.readWikitextFromJson(&obj);
 
+  bool tmpb =  awtr.readWikitextFromJson(&obj);
   QCOMPARE(tmpb, true);
 
   QString exp = "'''Ella Smith''' (born 6 June 1983) is an English actress.\n" ;
