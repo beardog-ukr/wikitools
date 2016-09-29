@@ -12,6 +12,14 @@
   <file alias="ErrorA.json">TestArticleWikitextReader_ErrorA.json</file>  
 </qresource>
 
+<qresource prefix="/EditTokenLoader">  
+  <file alias="Basic.json">EditTokenLoader_Basic.json</file>  
+</qresource>
+
+<qresource prefix="/LoginPerformer">  
+  <file alias="Basic.json">LoginPerformer_BasicA.json</file>  
+</qresource>
+
 <qresource prefix="/TokenLoader">  
   <file alias="Basic.json">TokenLoader_Basic.json</file>  
   <file alias="Double.json">TokenLoader_Double.json</file>  

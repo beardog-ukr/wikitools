@@ -1,5 +1,5 @@
-#ifndef __LoginPerformer__
-#define __LoginPerformer__
+#ifndef __EditingPerformer__
+#define __EditingPerformer__
 
 #include "BasicHttpReader.h"
 
@@ -10,27 +10,25 @@ class QJsonObject ;
 
 // === =======================================================================
 
-class LoginPerformer : public BasicHttpReader
+class EditingPerformer : public BasicHttpReader
 {
   Q_OBJECT
   friend class TestEngine;
 public:
-  LoginPerformer(QNetworkAccessManager* nam, QObject* parent =0);
-  virtual ~LoginPerformer();
+  EditingPerformer(QNetworkAccessManager* nam, QObject* parent =0);
+  virtual ~EditingPerformer();
 
   QString getToken(const QString& tt) const;
 
+  void setEditToken(const QString& et) ;
+  void setNewtext(const QString& nt) ;
+  void setTimestamp(const QString& ts) ;
+  void setPageTitle(const QString& up) ;
+  void setSummary(const QString& ss) ;
   void setWiki(const QString& langCode) ;
-  void setLoginToken(const QString& lt) ;
-  void setUserName(const QString& un) ;
-  void setUserPassword(const QString& up) ;
-  void setCookieHeader(const QVariant ch) ;
-
-  QString getLgToken() const;
-  QString getAllResponse() const;
 
 protected :
-  LoginPerformer();
+  EditingPerformer();
   void setupAll() ;
 
   virtual QNetworkReply* makeRequest();
@@ -39,13 +37,11 @@ protected :
   bool readValuesFromJson(QJsonObject*);
 
   QString langCode;
-  QString loginToken;
-  QString userName;
-  QString userPassword ;
-  QVariant cookieHeader ;
-
-  QString allResponse;
-  QString lgToken;
+  QString editToken;
+  QString pageTitle;
+  QString timestamp ;
+  QString newText ;
+  QString summary ;
 };
 
 // === =======================================================================

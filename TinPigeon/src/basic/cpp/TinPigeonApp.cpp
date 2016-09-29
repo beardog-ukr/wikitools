@@ -5,6 +5,7 @@
 #include "ActionWikiCategoryLoader.h"
 #include "ActionWikitextREChecker.h"
 #include "ActionTokenLoader.h"
+#include "ActionSetPageContent.h"
 
 // === =======================================================================
 
@@ -58,6 +59,7 @@ bool TinPigeonApp::processCommandLine() {
   ActionAuthMetainfoLoader::initCommandLineParser(parser) ;
   ActionTokenLoader::initCommandLineParser(parser);
   ActionLoginPerformer::initCommandLineParser(parser) ;
+  ActionSetPageContent::initCommandLineParser(parser) ;
 
   // Process the actual command line arguments given by the user
   QCoreApplication* ca = QCoreApplication::instance();
@@ -80,6 +82,9 @@ bool TinPigeonApp::processCommandLine() {
   }
   else if (actionStr == "ltl" ) {
     actionPerformer = new ActionTokenLoader(this);
+  }
+  else if (actionStr == "spc" ) {
+    actionPerformer = new ActionSetPageContent(this);
   }
   else if (actionStr.isEmpty() ) {
     c5w(c5, "Action must be specified");

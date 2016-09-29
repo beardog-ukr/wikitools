@@ -1,0 +1,15 @@
+{
+	"warnings": {
+		"login": {
+			"*": "Main-account login via action=login is deprecated and may stop working without warning. To continue login with action=login, see [[Special:BotPasswords]]. To safely continue using main-account login, see action=clientlogin."
+		}
+	},
+	"login": {
+		"result": "Success",
+		"lguserid": 34442,
+		"lgusername": "BearboarBot",
+		"lgtoken": "0b34144e12e4df1ed9137829594b8e11",
+		"cookieprefix": "testwiki",
+		"sessionid": "g9um3nm8dbvdp2qcsgbhld5q0bbm2fi4"
+	}
+}

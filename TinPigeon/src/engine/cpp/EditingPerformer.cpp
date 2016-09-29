@@ -1,4 +1,4 @@
-#include "LoginPerformer.h"
+#include "EditingPerformer.h"
 #include "FiveCatsLogger.h"
 #include "ErrorResponseProcessor.h"
 
@@ -19,114 +19,94 @@
 // === =======================================================================
 // === =======================================================================
 
-LoginPerformer::LoginPerformer()
-               :BasicHttpReader(0,0) {
+EditingPerformer::EditingPerformer()
+                 :BasicHttpReader(0,0) {
   setupAll();
 }
 
 // === =======================================================================
 
-LoginPerformer::LoginPerformer(QNetworkAccessManager* nam, QObject* parent)
+EditingPerformer::EditingPerformer(QNetworkAccessManager* nam, QObject* parent)
                :BasicHttpReader(nam,parent) {
   setupAll();
 }
 
 // === =======================================================================
 
-LoginPerformer::~LoginPerformer() {
+EditingPerformer::~EditingPerformer() {
 //ntdh
 }
 
 // === =======================================================================
 
-void LoginPerformer::setupAll() {
+void EditingPerformer::setupAll() {
   langCode = "test";
-  loginToken = "" ;
-  userName = "";
-  userPassword = "" ;
-
-  allResponse = "" ;
-  lgToken = "" ;
+  editToken = "" ;
+  timestamp = "";
+  pageTitle = "" ;
+  newText = "" ;
 }
 
 // === =======================================================================
 
-void LoginPerformer::setWiki(const QString& lc) {
+void EditingPerformer::setWiki(const QString& lc) {
   langCode = lc ;
 }
 
 // === =======================================================================
 
-void LoginPerformer::setLoginToken(const QString& lt) {
-  loginToken = lt;
+void EditingPerformer::setEditToken(const QString& et) {
+  editToken = et;
 }
 
 // === =======================================================================
 
-void LoginPerformer::setUserName(const QString& un) {
-  userName = un ;
+void EditingPerformer::setTimestamp(const QString& ts) {
+  timestamp = ts ;
 }
 
 // === =======================================================================
 
-void LoginPerformer::setUserPassword(const QString& up) {
-  userPassword = up ;
+void EditingPerformer::setPageTitle(const QString& pt) {
+  pageTitle = pt ;
 }
 
 // === =======================================================================
 
-void LoginPerformer::setCookieHeader(const QVariant ch) {
-  cookieHeader = ch ;
-}
-
-
-// === =======================================================================
-
-QString LoginPerformer::getAllResponse() const {
-  return allResponse ;
+void EditingPerformer::setNewtext(const QString& nt) {
+  newText = nt ;
 }
 
 // === =======================================================================
 
-QString LoginPerformer::getLgToken() const {
-  return lgToken ;
+void EditingPerformer::setSummary(const QString& ss) {
+  summary = ss ;
 }
 
 // === =======================================================================
 
-QNetworkReply* LoginPerformer::makeRequest() {
+QNetworkReply* EditingPerformer::makeRequest() {
   const QString endpointTemplate = "https://%1.wikipedia.org/w/api.php" ;
   const QString endpoint = endpointTemplate.arg(langCode);
   c5t(c5, __c5_MN__, "Endpoint is " + endpoint);
 
   QUrl url(endpoint);
 
-  //api.php?
-  //action=clientlogin&
-  //loginreturnurl=http://example.com/&
-  //logintoken=29590a3037d325be70b93fb8258ed29257448cfb%2B%5C&
-  //username=Bob&
-  //password=secret&
-  //rememberMe=1
-
   QUrlQuery query ;
-//  query.addQueryItem("action", "clientlogin");
-//  query.addQueryItem("format", "json");
-//  query.addQueryItem("loginreturnurl", "http://example.com/");
-//  query.addQueryItem("logintoken", loginToken);
-//  query.addQueryItem("username", userName );
-//  query.addQueryItem("password", userPassword);
-
-  query.addQueryItem("action", "login");
+  query.addQueryItem("action", "edit");
   query.addQueryItem("format", "json");
-  query.addQueryItem("lgtoken", loginToken);
-  query.addQueryItem("lgname", userName );
-  query.addQueryItem("lgpassword", userPassword);
+  query.addQueryItem("title", pageTitle);
+  query.addQueryItem("summary", summary );
+  query.addQueryItem("basetimestamp", timestamp);
+  query.addQueryItem("text", newText );
+  query.addQueryItem("token", editToken ); // token should go after text
+  query.addQueryItem("bot", "1" );
+
 
   QString qs = query.query(QUrl::FullyEncoded) ;
   qs.replace("+", "%2B");
-  c5t(c5, "QS is " + qs);
   QByteArray qsba = qs.toUtf8();
+  c5t(c5, "QS is " + qs);
 
   QNetworkRequest nrq(url);
   nrq.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -137,10 +117,10 @@ QNetworkReply* LoginPerformer::makeRequest() {
 
 // === =======================================================================
 
-bool LoginPerformer::processReceivedData() {
+bool EditingPerformer::processReceivedData() {
   //c5d(c5, __c5_MN__,  QString::fromUtf8(receivedData));
 
-  allResponse = QString::fromUtf8(receivedData) ;
+
 
   QJsonParseError jperr;
   QJsonDocument doc = QJsonDocument::fromJson(receivedData, &jperr);
@@ -164,40 +144,41 @@ bool LoginPerformer::processReceivedData() {
     return false;
   }
 
-  bool result = readValuesFromJson(&obj);
-  if (!result) {
-    c5d(c5, "Error with this context:\n" + QString::fromUtf8(receivedData) + "\n");
-  }
+  bool result = true;
+//  result = readValuesFromJson(&obj);
+//  if (!result) {
+//    c5d(c5, "Error with this context:\n" + QString::fromUtf8(receivedData) + "\n");
+//  }
 
   return result;
 }
 
 // === =======================================================================
 
-bool LoginPerformer::readValuesFromJson(QJsonObject* obj) {
-  if (!obj->contains("login")) {
-    errorMessage = "Failed to get expected \"login\" object";
-    return false;
-  }
+bool EditingPerformer::readValuesFromJson(QJsonObject* obj) {
+//  if (!obj->contains("login")) {
+//    errorMessage = "Failed to get expected \"login\" object";
+//    return false;
+//  }
 
-  QJsonValue lobjValue = obj->value("login");
-  if (!lobjValue.isObject()) {
-    errorMessage = "Failed to get expected \"login\" as object";
-    return false;
-  }
-  QJsonObject lobj = lobjValue.toObject();
+//  QJsonValue lobjValue = obj->value("login");
+//  if (!lobjValue.isObject()) {
+//    errorMessage = "Failed to get expected \"login\" as object";
+//    return false;
+//  }
+//  QJsonObject lobj = lobjValue.toObject();
 
-  QString resultString = lobj.value("result").toString();
-  if (resultString != "Success") {
-    errorMessage = "Incorrect login\\result value";
-    return false;
-  }
+//  QString resultString = lobj.value("result").toString();
+//  if (resultString != "Success") {
+//    errorMessage = "Incorrect login\\result value";
+//    return false;
+//  }
 
-  lgToken = lobj.value("lgtoken").toString();
-  if (lgToken.isEmpty()) {
-    errorMessage = "Incorrect login\\lgtoken value";
-    return false;
-  }
+//  lgToken = lobj.value("lgtoken").toString();
+//  if (lgToken.isEmpty()) {
+//    errorMessage = "Incorrect login\\lgtoken value";
+//    return false;
+//  }
 
   return true;
 }

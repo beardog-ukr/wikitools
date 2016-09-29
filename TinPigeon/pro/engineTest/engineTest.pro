@@ -27,5 +27,7 @@ SOURCES =  ../../src/engineTest/cpp/TestMain.cpp
 SOURCES += ../../src/engineTest/cpp/TestEngine.cpp
 SOURCES += ../../src/engineTest/cpp/TestArticleWikitextReader.cpp
 SOURCES += ../../src/engineTest/cpp/TestErrorResponseProcessor.cpp
+SOURCES += ../../src/engineTest/cpp/TestEditingTokenLoader.cpp
+SOURCES += ../../src/engineTest/cpp/TestLoginPerformer.cpp
 SOURCES += ../../src/engineTest/cpp/TestTokenLoader.cpp
 SOURCES += ../../src/engineTest/cpp/TestWikiCategoryReader.cpp

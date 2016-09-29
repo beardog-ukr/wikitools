@@ -17,6 +17,10 @@ private slots:
   void ErrorResponseProcessor_loadJson_BasicA();
   void ErrorResponseProcessor_loadJson_NoError();
 
+  void EditingTokenLoader_readValuesFromJson_Basic();
+
+  void LoginPerformer_readValuesFromJson_Basic();
+
   void TokenLoader_readValuesFromJson_Basic();
   void TokenLoader_readValuesFromJson_Double();
 

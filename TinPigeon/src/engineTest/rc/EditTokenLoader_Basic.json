@@ -1,0 +1,31 @@
+{
+    "batchcomplete": "",
+    "warnings": {
+        "info": {
+            "*": "The intoken parameter has been deprecated."
+        }
+    },
+    "query": {
+        "pages": {
+            "15580374": {
+                "pageid": 15580374,
+                "ns": 0,
+                "title": "Main Page",
+                "contentmodel": "wikitext",
+                "pagelanguage": "en",
+                "pagelanguagehtmlcode": "en",
+                "pagelanguagedir": "ltr",
+                "touched": "2016-09-26T12:40:43Z",
+                "lastrevid": 735912075,
+                "length": 6470,
+                "starttimestamp": "2016-09-26T14:00:05Z",
+                "edittoken": "36d04feffe8093d08f9f11ca2b9fdf3057e929e5+\\",
+                "revisions": [
+                    {
+                        "timestamp": "2016-08-23T22:45:26Z"
+                    }
+                ]
+            }
+        }
+    }
+}
